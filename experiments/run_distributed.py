@@ -84,14 +84,18 @@ def run_experiment(sdg_name, data_name, epsilon, n_holders=2,
 
         # Generate synthetic data via CaPS
         sim = CaPSSimulator(domain, partition_type, epsilon, seed=run_i)
-        t0 = time.time()
-        if sdg_name == "mwem_pgm":
-            synth_mbi, sim_fps = sim.run_mwem_pgm(partitions)
-        else:
-            synth_mbi, sim_fps = sim.run_aim(partitions)
-        synth_df = mbi_to_pandas(synth_mbi)
-        t_gen = time.time() - t0
-        print(f"CaPS generation: {synth_df.shape[0]} records in {t_gen:.1f}s")
+        try:
+            t0 = time.time()
+            if sdg_name == "mwem_pgm":
+                synth_mbi, sim_fps = sim.run_mwem_pgm(partitions)
+            else:
+                synth_mbi, sim_fps = sim.run_aim(partitions)
+            synth_df = mbi_to_pandas(synth_mbi)
+            t_gen = time.time() - t0
+            print(f"CaPS generation: {synth_df.shape[0]} records in {t_gen:.1f}s")
+        except (ValueError, RuntimeError) as e:
+            print(f"  Run {run_i+1}/{n_runs}: SKIPPED (generation failed: {e})")
+            continue
 
         transcript = sim.get_transcript()
 

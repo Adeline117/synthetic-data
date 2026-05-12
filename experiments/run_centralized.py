@@ -63,9 +63,13 @@ def run_experiment(sdg_name, data_name, epsilon, n_runs=5, train_size=1000,
         )
 
         # Generate synthetic data
-        t0 = time.time()
-        synth_df, _ = attack.generate(train[columns], domain, epsilon, seed=run_i)
-        t_gen = time.time() - t0
+        try:
+            t0 = time.time()
+            synth_df, _ = attack.generate(train[columns], domain, epsilon, seed=run_i)
+            t_gen = time.time() - t0
+        except (ValueError, RuntimeError) as e:
+            print(f"  Run {run_i+1}/{n_runs}: SKIPPED (generation failed: {e})")
+            continue
 
         # Run attack
         t0 = time.time()
@@ -83,9 +87,14 @@ def run_experiment(sdg_name, data_name, epsilon, n_runs=5, train_size=1000,
               f"gen={t_gen:.1f}s, atk={t_atk:.3f}s")
 
     # Summary
-    print(f"\nResults ({n_runs} runs):")
+    completed = len(results["ma"])
+    if completed == 0:
+        print(f"\nNo runs completed (all {n_runs} failed).")
+        return results
+    print(f"\nResults ({completed}/{n_runs} runs):")
     print(f"  MA:  {np.mean(results['ma']):.3f} +/- {np.std(results['ma']):.3f}")
-    print(f"  AUC: {np.mean(results['auc']):.3f} +/- {np.std(results['auc']):.3f}")
+    auc_valid = [a for a in results['auc'] if a is not None]
+    print(f"  AUC: {np.mean(auc_valid):.3f} +/- {np.std(auc_valid):.3f}")
 
     # Save results
     results_dir = os.path.join(BASE_DIR, "results", "centralized")
