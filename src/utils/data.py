@@ -78,6 +78,15 @@ def load_snake_data(snake_dir=None):
         domain_dict[m["name"]] = len(m["representation"])
     domain = Domain(list(domain_dict.keys()), list(domain_dict.values()))
 
+    # Convert categorical columns to integer codes for mbi compatibility
+    # mbi.Dataset.datavector() uses np.histogramdd which requires numeric data
+    for m in meta:
+        col = m["name"]
+        if df[col].dtype.name == "category" or df[col].dtype == object:
+            rep = m["representation"]
+            mapping = {v: i for i, v in enumerate(rep)}
+            df[col] = df[col].map(mapping).fillna(0).astype(int)
+
     return df, columns, meta, domain
 
 

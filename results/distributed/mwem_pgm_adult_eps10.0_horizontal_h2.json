@@ -1,0 +1,46 @@
+{
+  "sdg": "mwem_pgm",
+  "data": "adult",
+  "epsilon": 10.0,
+  "n_holders": 2,
+  "partition_type": "horizontal",
+  "n_runs": 2,
+  "external_ma_mean": 0.5986946860797724,
+  "malicious_ma_mean": 0.5986946860797724,
+  "colluding_ma_mean": 0.5316785338979371,
+  "external_auc_mean": 0.6100000000000001,
+  "malicious_auc_mean": 0.6100000000000001,
+  "colluding_auc_mean": 0.5,
+  "raw": {
+    "external": {
+      "ma": [
+        0.5191920631533714,
+        0.6781973090061733
+      ],
+      "auc": [
+        0.54,
+        0.68
+      ]
+    },
+    "malicious": {
+      "ma": [
+        0.5191920631533714,
+        0.6781973090061733
+      ],
+      "auc": [
+        0.54,
+        0.68
+      ]
+    },
+    "colluding": {
+      "ma": [
+        0.4799494819066338,
+        0.5834075858892404
+      ],
+      "auc": [
+        0.45,
+        0.55
+      ]
+    }
+  }
+}
