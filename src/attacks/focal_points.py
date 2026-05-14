@@ -28,7 +28,8 @@ def _aggregate_fps(all_fps_lists):
 
 
 def determine_aim_focal_points(aux_df, domain, eps, n_size, n_shadow_runs=50,
-                                delta=1e-9, max_model_size=80, seed=None):
+                                delta=1e-9, max_model_size=80, rounds=None,
+                                seed=None):
     """Run shadow modeling to extract AIM focal points.
 
     Args:
@@ -55,7 +56,7 @@ def determine_aim_focal_points(aux_df, domain, eps, n_size, n_shadow_runs=50,
 
         aim = AIMWithFocalPoints(
             epsilon=eps, delta=delta, max_model_size=max_model_size,
-            seed=rng.randint(100000),
+            rounds=rounds, seed=rng.randint(100000),
         )
         # Terminate early — only need focal points, not high-quality synthetic data
         try:

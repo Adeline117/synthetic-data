@@ -135,7 +135,10 @@ class AIMWithFocalPoints:
 
         # Iterative measurement
         terminate = False
-        while not terminate:
+        max_iters = self.rounds or 16 * len(domain)
+        n_iters = 0
+        while not terminate and n_iters < max_iters:
+            n_iters += 1
             # Budget check: can we afford another round?
             if rho - rho_used < 2 * (0.5 / sigma**2 + 1.0 / 8 * epsilon**2):
                 remaining = rho - rho_used
